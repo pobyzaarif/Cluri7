@@ -1,0 +1,18 @@
+# Kraken
+version: '3'
+
+services:
+  cluri7:
+    build:
+      context: .
+      dockerfile: Dockerfile-Cluri7
+    image: $USER:cluri7
+    ports:
+      - "9090:80"
+    volumes:
+      - docroot:/var/www/html
+      - ./sites:/var/www/html
+      - ./tools/custom:/cluri7/custom
+
+volumes:
+  docroot:

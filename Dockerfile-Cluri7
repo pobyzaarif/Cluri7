@@ -1,0 +1,38 @@
+# Base image.
+FROM debian:jessie
+
+# Timezone
+ENV TIMEZONE Asia/Jakarta
+
+# Update.
+RUN apt-get update && apt-get install -y
+
+# System Requirement.
+RUN apt-get install -y nano wget python python-pip git apache2 libapache2-mod-php5
+RUN apt-get clean
+
+# Go to.
+WORKDIR /cluri7
+
+# Get tools from github/contrib.
+RUN mkdir contrib
+
+## sqlmap
+RUN git clone --depth 1 https://github.com/sqlmapproject/sqlmap.git ./contrib/sqlmap
+
+## nikto
+RUN git clone --depth 1 https://github.com/sullo/nikto.git ./contrib/nikto
+
+## zap-cli
+RUN git clone --depth 1 https://github.com/Grunny/zap-cli.git ./contrib/zap-cli && cd contrib/zap-cli/ && pip install -e .[dev] && cd ../../
+
+# Get custom module.
+RUN mkdir custom
+
+# Server Conf.
+ADD sys/000-default.conf /etc/apache2/sites-available/000-default.conf
+ADD sys/run.sh /service/run.sh
+RUN chmod 755 /service/run.sh
+
+EXPOSE 80
+ENTRYPOINT ["/service/run.sh"]
