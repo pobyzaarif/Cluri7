@@ -1,2 +1,2 @@
 # Ignore txt file in specific path
-tools/custom/*.txt
+/tools/custom/*.txt
